@@ -1,12 +1,18 @@
 {
   "name": "sap-proxy-functions",
   "version": "1.0.0",
+  "description": "Azure Functions proxy for SAP API",
+  "main": "index.js",
   "scripts": {
     "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "test": "echo \"No tests specified\""
   },
   "dependencies": {
-    "@azure/functions": "^4.0.0",
+    "@azure/functions": "^3.5.1",
     "axios": "^1.6.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
