@@ -17,15 +17,24 @@ module.exports = async function (context, req) {
 
     try {
         const authHeader = req.headers.authorization || req.headers.Authorization;
-        context.log('Authorization header:', authHeader ? authHeader.substring(0, 50) + '...' : 'Missing');
+        
+        context.log('Authorization header:', authHeader ? 'Present' : 'Missing');
         context.log('All headers:', JSON.stringify(req.headers));
-        context.log('Request URL:', 'https://c6674ca9trial.it-cpitrial03-rt.cfapps.ap21.hana.ondemand.com/http/getSAPdata');
-        context.log('Outgoing headers:', JSON.stringify({
-            Authorization: authHeader,
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-        }));
+        
+        if (!authHeader) {
+            context.res = {
+                status: 401,
+                headers: { 'Access-Control-Allow-Origin': '*' },
+                body: { 
+                    error: 'Authorization header missing',
+                    receivedHeaders: Object.keys(req.headers)
+                }
+            };
+            return;
+        }
 
+        context.log('Making request to SAP API...');
+        
         const response = await axios.get(
             'https://c6674ca9trial.it-cpitrial03-rt.cfapps.ap21.hana.ondemand.com/http/getSAPdata',
             {
@@ -38,8 +47,7 @@ module.exports = async function (context, req) {
             }
         );
 
-        context.log('SAP API response:', JSON.stringify(response.data, null, 2));
-        context.log('Response headers:', JSON.stringify(response.headers));
+        context.log('SAP API response received successfully');
 
         context.res = {
             status: 200,
@@ -52,10 +60,8 @@ module.exports = async function (context, req) {
 
     } catch (error) {
         context.log.error('Error calling SAP API:', error.message);
-        context.log.error('Error details:', JSON.stringify(error.response?.data, null, 2));
-        context.log.error('Response headers:', JSON.stringify(error.response?.headers));
-        context.log.error('Request config:', JSON.stringify(error.config, null, 2));
-
+        context.log.error('Error details:', error.response?.data);
+        
         context.res = {
             status: error.response?.status || 500,
             headers: { 'Access-Control-Allow-Origin': '*' },
@@ -63,9 +69,7 @@ module.exports = async function (context, req) {
                 error: 'Failed to fetch SAP data',
                 details: error.message,
                 sapStatus: error.response?.status,
-                sapData: error.response?.data,
-                requestHeaders: error.config?.headers,
-                requestUrl: error.config?.url
+                sapData: error.response?.data
             }
         };
     }
