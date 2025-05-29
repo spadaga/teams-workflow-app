@@ -17,13 +17,20 @@ module.exports = async function (context, req) {
     }
 
     try {
-        const authHeader = req.headers.authorization;
+        // Get authorization header - try multiple ways
+        const authHeader = req.headers.authorization || req.headers.Authorization;
+        
+        context.log('Authorization header:', authHeader ? 'Present' : 'Missing');
+        context.log('All headers:', JSON.stringify(req.headers));
         
         if (!authHeader) {
             context.res = {
                 status: 401,
                 headers: { 'Access-Control-Allow-Origin': '*' },
-                body: { error: 'Authorization header missing' }
+                body: { 
+                    error: 'Authorization header missing',
+                    receivedHeaders: Object.keys(req.headers)
+                }
             };
             return;
         }
@@ -42,7 +49,7 @@ module.exports = async function (context, req) {
             }
         );
 
-        context.log('SAP API response received');
+        context.log('SAP API response received successfully');
 
         context.res = {
             status: 200,
@@ -55,13 +62,16 @@ module.exports = async function (context, req) {
 
     } catch (error) {
         context.log.error('Error calling SAP API:', error.message);
+        context.log.error('Error details:', error.response?.data);
         
         context.res = {
             status: error.response?.status || 500,
             headers: { 'Access-Control-Allow-Origin': '*' },
             body: {
                 error: 'Failed to fetch SAP data',
-                details: error.message
+                details: error.message,
+                sapStatus: error.response?.status,
+                sapData: error.response?.data
             }
         };
     }
