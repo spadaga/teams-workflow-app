@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://c6674ca9trial.it-cpitrial03-rt.cfapps.ap21.hana.ondemand.com/:path*"
+    }
+  ]
+}

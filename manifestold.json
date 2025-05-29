@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.16",
+  "version": "1.0.0",
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "packageName": "com.yash.workflowdashboard",
+  "developer": {
+    "name": "Suresh Padaga From Yash",
+    "websiteUrl": "https://teams-workflow-app.vercel.app/",
+    "privacyUrl": "https://teams-workflow-app.vercel.app/",
+    "termsOfUseUrl": "https://teams-workflow-app.vercel.app/"
+  },
+  "icons": {
+    "color": "icon-color.png",
+    "outline": "icon-outline.png"
+  },
+  "name": {
+    "short": "Workflow Dashboard",
+    "full": "Workflow Management Dashboard"
+  },
+  "description": {
+    "short": "View and manage your workflows",
+    "full": "A comprehensive dashboard to view and manage all your workflow tasks and approvals"
+  },
+  "accentColor": "#667eea",
+  "staticTabs": [
+    {
+      "entityId": "workflowDashboard",
+      "name": "Workflows",
+      "contentUrl": "https://teams-workflow-app.vercel.app/",
+      "scopes": ["personal"]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["teams-workflow-app.vercel.app"]
+}
