@@ -65,7 +65,9 @@ export async function fetchSAPWorkflows() {
                 'Authorization': `Bearer ${accessToken}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }
+            },
+            // Add explicit CORS handling for Azure SWA
+            withCredentials: false
         });
 
         console.log('Raw SAP response:', response.data);
@@ -103,6 +105,7 @@ export async function fetchSAPWorkflows() {
         throw new Error(`Failed to fetch workflows: ${error.message}`);
     }
 }
+
 
 export async function approveWorkflow(instanceId) {
     try {
